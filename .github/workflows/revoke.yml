@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: Revoke Showcase Site
+
+name: Revoke Database Entry
 
 on:
   issue_comment:
@@ -20,7 +21,7 @@ on:
       - created
 
 concurrency:
-  group: showcase-file-lock
+  group: db-file-lock
   cancel-in-progress: false
 
 jobs:
@@ -37,11 +38,11 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Remove site from showcased-sites.json
+      - name: Remove entry from data.json
         id: update_json
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
-        run: python .github/scripts/revoke_showcase.py
+        run: python .github/scripts/revoke_entry.py
 
       - name: Commit Changes
         if: steps.update_json.outputs.action_result == 'revoked'
@@ -50,9 +51,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          
-          git add resources/showcase/showcased-sites.json
-          git commit -m "Revoke showcase submission #${ISSUE_NUMBER}"
+
+          git add resources/db/data.json
+          git commit -m "Revoke entry submission #${ISSUE_NUMBER}"
           git push
 
       - name: Comment on Issue without closing

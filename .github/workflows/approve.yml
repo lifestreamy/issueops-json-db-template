@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: Approve Showcase Site
+name: Approve Database Entry
 
 on:
   issue_comment:
@@ -20,7 +20,7 @@ on:
       - created
 
 concurrency:
-  group: showcase-file-lock
+  group: db-file-lock
   cancel-in-progress: false
 
 jobs:
@@ -41,13 +41,13 @@ jobs:
         id: parse
         uses: zentered/issue-forms-body-parser@v2.2.0
 
-      - name: Update showcased-sites.json with the new website
+      - name: Update data.json with the new entry
         id: update_json
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           PARSED_DATA: ${{ steps.parse.outputs.data }}
           RAW_ISSUE_BODY: ${{ github.event.issue.body }}
-        run: python .github/scripts/approve_showcase.py
+        run: python .github/scripts/approve_entry.py
 
       - name: Commit Changes
         if: steps.update_json.outputs.action_result != 'unchanged'
@@ -56,9 +56,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          
-          git add resources/showcase/showcased-sites.json
-          git commit -m "Approve showcase submission #${ISSUE_NUMBER}"
+
+          git add resources/db/data.json
+          git commit -m "Approve entry submission #${ISSUE_NUMBER}"
           git push
 
       - name: Comment on Issue without closing
