@@ -6,6 +6,8 @@ A completely free, generalized template that leverages GitHub Actions and IssueO
 
 This repository is designed to be used as a **GitHub Template**. Generate your own repository from this one to instantly set up a backend for portfolios, showcases, link trees, and directory sites.
 
+> An example of a concrete implementation of this template, with even more useful additions (to be included in the next versions of this template):
+> https://github.com/varabyte/kobweb-showcase-db  
 ---
 
 ## Table of Contents
